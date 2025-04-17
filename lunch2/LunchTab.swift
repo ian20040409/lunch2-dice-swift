@@ -24,7 +24,7 @@ struct LunchTab: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 50) {
+                VStack(spacing: 30) {
                     Text("午餐要吃什麼？")
                         .font(.largeTitle).bold()
                         .padding(.top, 80)
@@ -62,7 +62,12 @@ struct LunchTab: View {
                     
                     HStack {
                         TextField("輸入自訂選項...", text: $customText)
-                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray, lineWidth: 2)
+                            )
                             .submitLabel(.done)
                             .onSubmit {
                                 hideKeyboard()
@@ -76,49 +81,6 @@ struct LunchTab: View {
                             Label("新增", systemImage: "plus.circle.fill")
                         }
                         .buttonStyle(.bordered)
-                    }
-
-                    Button {
-                        withAnimation(.spring()) {
-                            showSettings = true
-                        }
-                    } label: {
-                        Label("設定", systemImage: "gearshape")
-                    }
-                    .sheet(isPresented: $showSettings) {
-                        NavigationStack {
-                            List {
-                                Button("還原預設選項") {
-                                    withAnimation(.spring()) {
-                                        vm.restoreDefaultOptions()
-                                        selectedToDelete.removeAll()
-                                    }
-                                }
-                                Button("查看歷史紀錄") {
-                                    withAnimation(.spring()) {
-                                        showHistory = true
-                                        showSettings = false
-                                    }
-                                }
-                                Button("查看所有選項") {
-                                    withAnimation(.spring()) {
-                                        showAll = true
-                                        showSettings = false
-                                        selectedToDelete.removeAll()
-                                    }
-                                }
-                            }
-                            .navigationTitle("設定")
-                            .toolbar {
-                                ToolbarItem(placement: .cancellationAction) {
-                                    Button("關閉") {
-                                        withAnimation(.spring()) {
-                                            showSettings = false
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
                 .scaleEffect(1.02)

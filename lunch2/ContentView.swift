@@ -14,7 +14,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("地圖搜尋", systemImage: "map")
                 }
+            
+            SettingsTab(vm: vm)
+                .tabItem {
+                    Label("設定", systemImage: "gear")
+                }
         }
-        
     }
 }
