@@ -26,10 +26,10 @@ struct LunchTab: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 30) {
+                VStack(spacing: 10) {
                     Text("午餐要吃什麼？")
                         .font(.largeTitle).bold()
-                        .padding(.top, 80)
+                        .padding(.top, 50)
                         .foregroundColor(fontColor)
                         .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                     
@@ -71,7 +71,7 @@ struct LunchTab: View {
                         }
                     }
                 }
-                VStack(spacing: 36) {
+                VStack(spacing: 15) {
                     Button {
                         let generator = UIImpactFeedbackGenerator(style: .medium)
                         generator.impactOccurred()
@@ -111,7 +111,7 @@ struct LunchTab: View {
                             }
                             withAnimation(.spring()) {
                                 vm.addOption(trimmed)
-                                customText = "自訂隨機選項"
+                                
                                 infoMessage = "✅新增成功"
                             }
                         } label: {
