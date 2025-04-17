@@ -20,7 +20,9 @@ struct LunchTab: View {
     @State private var fontColor: Color = .primary
     @State private var showSettings = false
     @State private var diceRotation: Double = 0
-    
+    @State private var copyButtonScale: CGFloat = 1.0
+    @State private var infoMessage: String?
+
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
@@ -31,18 +33,43 @@ struct LunchTab: View {
                         .foregroundColor(fontColor)
                         .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 2)
                     
-                    Text(vm.resultText)
-                        .font(.title)
-                        .foregroundColor(vm.animateResult ? .green : fontColor)
-                        .scaleEffect(vm.animateResult ? 1.5 : 1.0)
-                        .opacity(vm.animateResult ? 1.0 : 0.8)
-                        .animation(.interpolatingSpring(stiffness: 500, damping: 5), value: vm.animateResult)
-                        .onChange(of: vm.animateResult) { newValue in
-                            if newValue {
-                                let generator = UIImpactFeedbackGenerator(style: .medium)
-                                generator.impactOccurred()
+                    HStack(spacing: 12) {
+                        Text(vm.resultText)
+                            .font(.title)
+                            .foregroundColor(vm.animateResult ? .green : fontColor)
+                            .scaleEffect(vm.animateResult ? 1.5 : 1.0)
+                            .opacity(vm.animateResult ? 1.0 : 0.8)
+                            .animation(.interpolatingSpring(stiffness: 500, damping: 5), value: vm.animateResult)
+                            .onChange(of: vm.animateResult) { newValue in
+                                if newValue {
+                                    let generator = UIImpactFeedbackGenerator(style: .medium)
+                                    generator.impactOccurred()
+                                }
                             }
+
+                        if !vm.resultText.isEmpty {
+                            Button(action: {
+                                let choice = vm.resultText.components(separatedBy: "：").last ?? vm.resultText
+                                UIPasteboard.general.string = choice
+                                withAnimation(.spring(response: 0.2, dampingFraction: 0.5)) {
+                                    copyButtonScale = 0.85
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    withAnimation(.spring()) {
+                                        copyButtonScale = 1.0
+                                    }
+                                }
+                            }) {
+                                Image(systemName: "doc.on.doc.fill")
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(Circle().fill(Color.blue))
+                                    .scaleEffect(copyButtonScale)
+                                    .shadow(radius: 3)
+                            }
+                            .buttonStyle(.plain)
                         }
+                    }
                 }
                 VStack(spacing: 36) {
                     Button {
@@ -73,9 +100,19 @@ struct LunchTab: View {
                                 hideKeyboard()
                             }
                         Button {
+                            let trimmed = customText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if trimmed.isEmpty {
+                                infoMessage = "請輸入內容"
+                                return
+                            }
+                            if vm.options.contains(trimmed) {
+                                infoMessage = "選項已存在"
+                                return
+                            }
                             withAnimation(.spring()) {
-                                vm.addOption(customText)
-                                customText = ""
+                                vm.addOption(trimmed)
+                                customText = "自訂隨機選項"
+                                infoMessage = "✅新增成功"
                             }
                         } label: {
                             Label("新增", systemImage: "plus.circle.fill")
@@ -93,6 +130,9 @@ struct LunchTab: View {
             .onTapGesture {
                 hideKeyboard()
             }
+        }
+        .alert(item: $infoMessage) { message in
+            Alert(title: Text("新增選項提示"), message: Text(message), dismissButton: .default(Text("確定")))
         }
         .sheet(isPresented: $showHistory) {
             NavigationStack {
@@ -170,4 +210,8 @@ struct LunchTab: View {
             }
         }
     }
+}
+
+extension String: Identifiable {
+    public var id: String { self }
 }

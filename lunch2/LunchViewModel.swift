@@ -8,6 +8,7 @@ class LunchViewModel: ObservableObject {
     @Published var resultText: String = ""
     @Published var animateResult = false
     
+    
     private let optionsKey = "lunchOptions"
     private let historyKey = "lunchHistory"
     private var cancellables = Set<AnyCancellable>()

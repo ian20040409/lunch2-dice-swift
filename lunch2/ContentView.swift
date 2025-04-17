@@ -20,5 +20,7 @@ struct ContentView: View {
                     Label("設定", systemImage: "gear")
                 }
         }
+        
     }
 }
+
