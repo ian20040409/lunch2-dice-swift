@@ -1,13 +1,7 @@
-//
-//  lunch2App.swift
-//  lunch2
-//
-//  Created by 林恩佑 on 2025/4/17.
-//
-
 import SwiftUI
 
-struct lunch2App: App {
+@main
+struct MyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -1,24 +1,20 @@
-//
-//  ContentView.swift
-//  lunch2
-//
-//  Created by 林恩佑 on 2025/4/17.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var vm = LunchViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            LunchTab(vm: vm)
+                .tabItem {
+                    Label("隨機決定", systemImage: "dice")
+                }
+            
+            MapTab()
+                .tabItem {
+                    Label("地圖搜尋", systemImage: "map")
+                }
         }
-        .padding()
+        
     }
-}
-
-#Preview {
-    ContentView()
 }
