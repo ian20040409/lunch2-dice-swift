@@ -11,8 +11,8 @@
       "blur-material" : null,
       "layers" : [
         {
-          "image-name" : "dice_white.svg",
-          "name" : "dice_white"
+          "image-name" : "dice-1-svgrepo-com.svg",
+          "name" : "dice-1-svgrepo-com"
         }
       ],
       "lighting" : "individual",
